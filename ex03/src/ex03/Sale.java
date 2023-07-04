@@ -64,8 +64,40 @@ public class Sale {
 				System.out.println(array.size()+"개 상품이 등록되었습니다.");
 				break;
 			case "4":	
+				System.out.print("수정번호>");
+				find = false;
+				String update = s.nextLine();
+				for (SaleVO vo: array) {
+					if(Integer.parseInt(update)==vo.getCode()) {
+						find = true;
+						System.out.print("상품이름: "+vo.getName()+">");
+						String newName = s.nextLine();
+						if(newName!="") vo.setName(newName);
+						System.out.print("상품가격: "+vo.getPrice()+">");
+						String newPrice = s.nextLine();
+						if(newPrice!="") vo.setPrice(Integer.parseInt(newPrice));
+						String newQnt = s.nextLine();
+						System.out.print("재고수량: "+vo.getQnt()+">");
+						if(newQnt!="") vo.setQnt(Integer.parseInt(newQnt));
+						System.out.println("수정완료!");
+					}
+				}if(!find) {
+					System.out.println("없는 번호입니다.");
+				}
 				break;
 			case "5":	
+				System.out.print("삭제번호>");
+				String delete = s.nextLine();
+				find = false;
+				for (SaleVO vo: array) {
+					if(Integer.parseInt(delete)==vo.getCode()) {
+						find = true;
+						array.remove(vo);
+						System.out.println("삭제완료");
+						break;
+					}
+				}
+				if(!find) System.out.println("없는 번호입니다.");
 				break;
 			}//switch
 		}//while
