@@ -1,4 +1,4 @@
-package ex05;
+package ex07;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,5 +18,4 @@ public class Database {
 		}
 		return con;
 	}
-} 
-    
+}
