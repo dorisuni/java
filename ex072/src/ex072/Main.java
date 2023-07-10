@@ -6,15 +6,18 @@ import java.text.*;
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		ProductDAO dao = new ProductDAOImpl();
+		SaleDAO sdao = new SaleDAO();
 		Scanner s = new Scanner(System.in);
 		boolean run = true;
-		DecimalFormat df = new DecimalFormat("#,###.00");
+		DecimalFormat df = new DecimalFormat("#,###원");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
 		while (run) {
 			System.out.println("\n\n******* 상품관리 *****************************");
 			System.out.println("--------------------------------------------");
 			System.out.println("1.입력 |2.조회 |3.목록 |4.수정 |5.삭제 |0.종료");
+			System.out.println("6.상품별 매출조회 | 7.매출등록 |8.상품별 매출현황");
 			System.out.println("--------------------------------------------");
 			System.out.print("선택>");
 			String menu = s.nextLine();
@@ -35,7 +38,6 @@ public class Main {
 					dao.insert(pro);
 					System.out.println("상품이 등록되었습니다!");
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					System.out.println("상품등록 오류");
 				}
 				break;
@@ -75,33 +77,158 @@ public class Main {
 				break;
 
 			case "4":
+				System.out.println("수정할 상품코드>");
+				String pcode = s.nextLine();
+				try {
+					ProductVO pro3 = dao.read(Integer.parseInt(pcode));
+					if (pro3.getPname() == null) {
+						System.out.println("수정할 상품이 존재하지 않습니다.");
+					} else {
+						System.out.println("상품이름:" + pro3.getPname());
+						System.out.println("새로운 상품이름>");
+						String pname = s.nextLine();
+						if (pname != "")
+							pro3.setPname(pname);
+						int price = input("새로운 상품가격");
+						if (price != 0)
+							pro3.setPprice(price);
+
+						System.out.println("상품가격:" + pro3.getPprice());
+
+						System.out.println("상품가격:" + df.format(pro3.getPprice()));
+						System.out.print("수정하실래요?(Y,y)");
+						String sel = s.nextLine();
+
+						if (sel.equals("Y") || sel.equals("y") || sel.equals("ㅛ")) {
+							dao.update(pro3);
+
+						}
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("상품정보수정실패");
+				}
+
 				break;
 
 			case "5":
 				System.out.print("삭제코드입력>");
-				String pcode = s.nextLine();
+				pcode = s.nextLine();
 
 				try {
-					ProductVO pro2 =  dao.read(Integer.parseInt(pcode));
-					if(pro2.getPname()==null) {
+					ProductVO pro2 = dao.read(Integer.parseInt(pcode));
+					if (pro2.getPname() == null) {
 						System.out.println("삭제할 상품이 존재하지않습니다.");
-					}else {
-						System.out.println("상품이름:"+pro2.getPname());
-						System.out.println("상품가격:"+df.format(pro2.getPprice()));
+					} else {
+						System.out.println("상품이름:" + pro2.getPname());
+						System.out.println("상품가격:" + df.format(pro2.getPprice()));
 						System.out.print("삭제하실래요?(Y,y)");
 						String sel = s.nextLine();
-						
-						if(sel.equals("Y")||sel.equals("y")||sel.equals("ㅛ")) {
+
+						if (sel.equals("Y") || sel.equals("y") || sel.equals("ㅛ")) {
 							dao.delete(Integer.parseInt(pcode));
 							System.out.println("상품삭제완료!");
 						}
 					}
 				} catch (Exception e) {
-					System.out.println("상품삭제 오류"+e.toString());
+					System.out.println("상품삭제 오류" + e.toString());
 				}
 
 				break;
 
+			case "6":	
+				int code = input("조회할상품코드");
+				if(code==0) {
+					System.out.println("조회를 종료합니다.");
+					break;
+				}else {
+					try {
+						ProductVO pro4 = dao.read(code);
+						if(pro4.getPname()==null) {
+							System.out.println("조회할 상품이 없습니다.");
+							
+						}else {
+							System.out.println("상품이름:"+pro4.getPname());
+							System.out.println("상품가격:"+df.format(pro4.getPprice()));
+							System.out.println("-----------------------------------------");
+							for(SaleVO vo:sdao.list(code)) {
+								System.out.printf("%d\t%d\t%s\t%s\t%s\n",
+										vo.getScode(),
+										vo.getQnt(),
+										df.format(vo.getSprice()),
+										df.format((vo.getQnt()) * (vo.getSprice())),
+										sdf.format(vo.getSdate()));
+								
+								
+							}
+							
+							
+							
+						}
+						
+						
+						
+					} catch (Exception e) {
+						System.out.println("상품별 판매목록" + e.toString());
+					}
+					
+				}
+				
+				break;
+				
+			case "7":
+				
+				code = input("등록할 상품코드>");
+				if(code ==0) {
+					break;
+				}else {
+					try {
+						ProductVO pro5 = dao.read(code);
+						if(pro5.getPname() ==null) {
+							System.out.println("등록할 상품이 없습니다.");
+						}else {
+							System.out.println("상품이름:"+pro5.getPname());
+							System.out.println("상품가격:"+df.format(pro5.getPprice()));
+							int qnt = input("상품수량");
+							SaleVO svo = new SaleVO();
+							svo.setPcode(code);
+							svo.setQnt(qnt);
+							int sprice = input("판매가격");
+							if(sprice==0) svo.setSprice(pro5.getPprice());
+							else svo.setSprice(sprice);
+							sdao.insert(svo);
+							System.out.println("판매등록완료!");
+						
+						}
+						
+					} catch (Exception e) {
+						System.out.println("매출등록"+e.toString());
+					}
+					
+				}
+				
+				
+				break;
+			
+			case "8":
+				int sum_price = 0;
+				int sum_qnt = 0;
+				
+				for(SaleVO vo:sdao.sum_list()) {
+					System.out.printf("%d\t%-20s\t%d\t\s\n",
+							vo.getPcode(),vo.getPname(),
+							vo.getQnt(),df.format(vo.getSprice()));
+					sum_price += vo.getSprice();
+					sum_qnt += vo.getQnt();
+				}
+				
+				System.out.println("--------------------------");
+				System.out.printf("총판매수: %d\t총판매금액: %d\n",sum_price,sum_qnt);
+				
+				break;
+				
+				
+				
 			default:
 				System.out.println("메뉴를 다시 선택하세요!");
 
@@ -117,8 +244,12 @@ public class Main {
 		while (true) {
 			System.out.print(title + ">");
 			try {
-				number = Integer.parseInt(s.nextLine());
-				return number;
+				String str= s.nextLine();
+				if(str=="") {
+					return 0;
+				}else {
+					return Integer.parseInt(str);
+				}
 			} catch (Exception e) {
 				System.out.println("숫자로 입력하세요!");
 			}

@@ -28,4 +28,7 @@ public class ProductVO {
 	public String toString() {
 		return "ProductVO [pcode=" + pcode + ", pname=" + pname + ", pprice=" + pprice + "]";
 	}
+
+	
+
 }
