@@ -105,7 +105,6 @@ public class Main {
 						}
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					System.out.println("상품정보수정실패");
 				}
 
