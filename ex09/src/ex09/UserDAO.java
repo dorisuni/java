@@ -8,6 +8,20 @@ public class UserDAO {
 	Connection con = Database.connect();
 
 	
+	//포인트증가
+	public void updatePoint(String id) {
+		try {
+			String sql = "UPDATE USERS SET POINT=POINT+10 WHERE ID=?";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, id);
+			ps.execute();
+			
+		}catch(Exception e) {
+			System.out.println("사용자포인트증가오류"+e.toString());
+		}
+		
+	}
+	
 	//사용자 삭제하기
 	public void delete(String uid)throws Exception {
 		

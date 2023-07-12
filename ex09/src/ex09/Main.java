@@ -7,13 +7,13 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
 		UserDAO udao = new UserDAO();
-
 		boolean run = true;
 
 		while (run) {
-			System.out.println("\n\n******* 메시지관리 **************************************");
+			System.out.println("\n\n******* 메인메뉴 **************************************");
 			System.out.println("------------------------------------------------------");
 			System.out.println("|1.사용자목록|2.사용자조회|3.사용자수정|4.사용자등록|5.사용자삭제|0.종료|");
+			System.out.println("|6.메시지관리");
 			System.out.println("------------------------------------------------------");
 			System.out.print("선택>");
 			String menu = s.nextLine();
@@ -155,7 +155,22 @@ public class Main {
 					}
 				}
 				break;
-
+			case "6":
+				System.out.print("아이디>");
+				id = s.nextLine();
+				if(id=="") {
+					System.out.println("메시지관리를 취소합니다.");
+				}else {
+					UserVO uvo = udao.read(id);
+					if(uvo.getUname()==null) {
+						System.out.println("사용자가 존재하지 않습니다.");
+					}else {
+						Messages.run(uvo);
+					}
+				}
+				break;
+				
+				
 			default:
 				System.out.println("메뉴를 다시 선택해 주세요.");
 
