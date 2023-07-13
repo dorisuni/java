@@ -1,19 +1,67 @@
 package ex10;
+
 import java.util.*;
 import java.sql.*;
 
 public class EnrolDAO {
 	Connection con = Database.connect();
+
 	
-	//특정 강좌를 신청한 학생목록
-	public List<EnrolVO> slist(String ccode){
+	//수강신청
+	public void insert(String ccode,String scode) {
+		try {
+			String sql = "INSERT INTO ENROLS (SCODE, CCODE)"
+					+ "VALUES(?,?)";
+			
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, scode);
+			ps.setString(2, ccode);
+			ps.execute();
+			
+			
+		}catch(Exception e) {
+			System.out.println("수강신청오류:"+e.toString());
+		}
+	}
+	
+	
+	
+	// 특정학생이 특정강좌를 신청했는지 조회
+	// s코드와 c코드를 받아서 신청한 사람이 c코드에 있는지 조회해야함.
+
+	public EnrolVO read(String scode, String ccode) {
+		EnrolVO vo = new EnrolVO();
+		try {
+			String sql = "SELECT * FROM VIEW_ENROLS where scode = ? and ccode=?";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, scode);
+			ps.setString(2, ccode);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				vo.setScode(rs.getString("scode"));
+				vo.setSname(rs.getString("sname"));
+				vo.setCname(rs.getString("cname"));
+				vo.setCcode(rs.getString("ccode"));
+				vo.setEdate(rs.getTimestamp("edate"));
+				vo.setGrade(rs.getInt("grade"));
+			}
+
+		} catch (Exception e) {
+			System.out.println("특정 학생이 신청한 강좌목록:" + e.toString());
+		}
+
+		return vo;
+	}
+
+	// 특정 강좌를 신청한 학생목록
+	public List<EnrolVO> slist(String ccode) {
 		List<EnrolVO> array = new ArrayList<EnrolVO>();
 		try {
 			String sql = "SELECT * FROM VIEW_ENROLS where ccode = ?";
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, ccode);
 			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				EnrolVO vo = new EnrolVO();
 				vo.setScode(rs.getString("scode"));
 				vo.setSname(rs.getString("sname"));
@@ -21,32 +69,23 @@ public class EnrolDAO {
 				vo.setGrade(rs.getInt("grade"));
 				array.add(vo);
 			}
-		
-			
-			
-			
-		}catch(Exception e) {
-			System.out.println("특정 학생이 신청한 강좌목록:"+e.toString());
+
+		} catch (Exception e) {
+			System.out.println("특정 학생이 신청한 강좌목록:" + e.toString());
 		}
-		
+
 		return array;
 	}
-	
-	
-	
-	
-	
-	
-	
-	//특정 학생이 신청한 강좌목록	
-	public List<EnrolVO> clist(String scode){
+
+	// 특정 학생이 신청한 강좌목록
+	public List<EnrolVO> clist(String scode) {
 		List<EnrolVO> array = new ArrayList<EnrolVO>();
 		try {
 			String sql = "SELECT * FROM VIEW_ENROLS where scode = ?";
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, scode);
 			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				EnrolVO vo = new EnrolVO();
 				vo.setSname(rs.getString("sname"));
 				vo.setCcode(rs.getString("ccode"));
@@ -55,16 +94,12 @@ public class EnrolDAO {
 				vo.setGrade(rs.getInt("grade"));
 				array.add(vo);
 			}
-		
-			
-			
-			
-		}catch(Exception e) {
-			System.out.println("특정 학생이 신청한 강좌목록:"+e.toString());
+
+		} catch (Exception e) {
+			System.out.println("특정 학생이 신청한 강좌목록:" + e.toString());
 		}
-		
+
 		return array;
 	}
-			
-	
+
 }
