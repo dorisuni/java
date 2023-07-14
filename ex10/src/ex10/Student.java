@@ -59,7 +59,7 @@ public class Student {
 								System.out.println("수강신청내역이 없습니다.");
 							} else {
 								for (EnrolVO v : carray) {
-									System.out.printf("%s\t%s\t%d\t%s\n", v.getCcode(), v.getCname(), v.getGrade(),
+									System.out.printf("%s\t%-20s\t%d\t%s\n", v.getCcode(), v.getCname(), v.getGrade(),
 											sdf.format(v.getEdate()));
 								}
 							}
