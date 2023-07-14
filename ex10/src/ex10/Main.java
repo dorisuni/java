@@ -23,30 +23,25 @@ public class Main {
 				System.out.println("프로그램 종료!");
 				run = false;
 				break;
-			
+
 			case "1":
 				Student.run();
-				break;	
-			
+				break;
+
 			case "2":
 				Course.run();
 				break;
-			
+
 			case "3":
 				Enrol.run();
-				break;	
-				
+				break;
+
 			default:
 				System.out.println("올바른 번호를 입력해 주세요.");
-				
-				
-				
-				
-				
-				
-			}//switch
 
-		}//while
+			}// switch
 
-	}//main
-}//Main
+		} // while
+
+	}// main
+}// Main

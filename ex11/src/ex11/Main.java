@@ -102,7 +102,9 @@ public class Main {
 					}
 				}
 				break;
-
+			case "4":
+				Facil.run();
+				break;
 			case "6":
 				CampVO cvo = new CampVO();
 				cvo.setCno(cdao.getNo());
