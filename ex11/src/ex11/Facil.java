@@ -121,6 +121,8 @@ public class Facil { // 시설물관리 서브메뉴
 			}// switch
 		} // while
 	}// run
+
+	
 	//삭제할 시설물번호가 있는지 체크하는 메서드
 	public static int checkDno(String fno, List<CampFacilVO> array) {
 		int error = 0;
